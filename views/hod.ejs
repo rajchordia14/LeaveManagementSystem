@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>HOD's Tab</title>
+  </head>
+  <body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">Welcome <%= userh%></a>
+</nav>
+<div class="container mt-4">
+
+
+<h3 style="display: inline-block;">Leave Remaining</h3>
+
+<form action="/users/h_previous_app" method="get">
+
+  <input type="hidden" name="fid" value="<%= fidh%>">
+  <input type="hidden" name = "user" value="<%=userh%>">
+  <input type="hidden" name = "role" value="<%=roleh%>">
+  <input type="hidden" name = "dept" value="<%=depth%>">
+
+  <button  type="submit" class="btn btn-primary">Leave Application</button>
+</form>
+
+<hr>
+<div>
+
+
+
+
+
+
+
+
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Faculty ID</th>
+        <th scope="col">Faculty Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">Start Date</th>
+        <th scope="col">End Date</th>
+        <th scope="col">Number of Days</th>
+        <th scope="col">Reason</th>
+        <th scope="col">Remark</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% data.forEach(x=>{%>
+        <tr>
+          <td><%= x.fid %></td>
+          <td><%= x.user %></td>
+          <td><%= x.type %></td>
+          <td><%= x.s_date %></td>
+          <td><%= x.e_date %></td>
+          <td><%= x.numdays %></td>
+          <td><%= x.reason %></td>
+          
+          <form method="POST">
+            <td><input type="text" name="rembyHOD" id="rembyHOD" placeholder="Remark"></td>
+            <input type="hidden" name="user" value="<%= x.user%>">
+            <input type="hidden" name="fid" value="<%= x.fid%>">
+            <input type="hidden" name="s_date" value="<%= x.s_date%>">
+            <input type="hidden" name="e_date" value="<%= x.e_date%>">
+            <input type="hidden" name="type" value="<%= x.type%>">
+            <input type="hidden" name="status" value="<%= x.status%>">
+            <input type="hidden" name="dept" value="<%= x.dept%>">
+            
+            <input type="hidden" name="fidh" value="<%= fidh%>">
+            <input type="hidden" name = "userh" value="<%=userh%>">
+            <input type="hidden" name = "roleh" value="<%=roleh%>">
+            <input type="hidden" name = "depth" value="<%=depth%>">
+            <td>
+                <button formaction="/users/hod" value="1" name="b1"  style="margin-right: 40px;" type="submit" class="btn btn-primary">Approve</button>
+                <button formaction="/users/hod" name="b2" value="2" type="submit" class="btn btn-danger" ><a style="color: white;">Decline</a></button>
+            </td>
+          </form>
+
+        </tr>
+      <%})%>
+    </tbody>
+  
+  </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+<!-- <button type="button" class="btn btn-primary">Send to DOFA</button>
+
+<button type="button" class="btn btn-danger">Decline</button> -->
+
+</div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
