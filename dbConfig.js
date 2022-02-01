@@ -9,4 +9,4 @@ const pool = new Pool({
     connectionString:isProduction?process.env.DB_DATABASE_URL:connectionString
 });
 
-module.export = {pool};
+module.export = {pool};   

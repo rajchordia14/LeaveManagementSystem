@@ -31,15 +31,6 @@
 
 <hr>
 <div>
-
-
-
-
-
-
-
-
-
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -60,8 +51,8 @@
           <td><%= x.fid %></td>
           <td><%= x.user %></td>
           <td><%= x.type %></td>
-          <td><%= x.s_date %></td>
-          <td><%= x.e_date %></td>
+          <td><%= x.s_date.toISOString().substring(0,10) %></td>
+          <td><%= x.e_date.toISOString().substring(0,10) %></td>
           <td><%= x.numdays %></td>
           <td><%= x.reason %></td>
           
@@ -73,6 +64,7 @@
             <input type="hidden" name="e_date" value="<%= x.e_date%>">
             <input type="hidden" name="type" value="<%= x.type%>">
             <input type="hidden" name="status" value="<%= x.status%>">
+            <input type="hidden" name="numdays" value="<%= x.numdays%>">
             <input type="hidden" name="dept" value="<%= x.dept%>">
             
             <input type="hidden" name="fidh" value="<%= fidh%>">
@@ -80,8 +72,15 @@
             <input type="hidden" name = "roleh" value="<%=roleh%>">
             <input type="hidden" name = "depth" value="<%=depth%>">
             <td>
+              <%if(x.numdays>7){%>
+                <button formaction="/users/hod" value="1" name="b1"  style="margin-right: 40px;" type="submit" class="btn btn-primary">Submit</button>
+                <button formaction="/users/hod" name="b2" value="2" type="submit" class="btn btn-danger" ><a style="color: white;">Submit & Recommend</a></button>
+              <%}%>
+              <%if(x.numdays<=7){%>
                 <button formaction="/users/hod" value="1" name="b1"  style="margin-right: 40px;" type="submit" class="btn btn-primary">Approve</button>
                 <button formaction="/users/hod" name="b2" value="2" type="submit" class="btn btn-danger" ><a style="color: white;">Decline</a></button>
+              <%}%>
+  
             </td>
           </form>
 
@@ -90,21 +89,6 @@
     </tbody>
   
   </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
 
 <!-- <button type="button" class="btn btn-primary">Send to DOFA</button>

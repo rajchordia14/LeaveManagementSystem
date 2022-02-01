@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
-    <title>Previous Applications</title>
+    <title>Faculty Previous Applications</title>
   </head>
   <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -38,8 +38,8 @@
         <% data.forEach(x=>{%>
           <tr>
             <td><%= x.type %></td>
-            <td><%= x.s_date %></td>
-            <td><%= x.e_date %></td>
+            <td><%= x.s_date.toISOString().substring(0,10) %></td>
+            <td><%= x.e_date.toISOString().substring(0,10) %></td>
             <td><%= x.numdays %></td>
             <td><%= x.reason %></td>
             <td><%= x.rembyHOD %></td>
@@ -49,12 +49,22 @@
             <% if(x.status=='P') {%>
               <td><%= "Pending" %></td>
               <%}%>
+
+              
             <%if(x.status=='D'){%>
               <td><%= "Declined" %></td>
             <%}%>
             <%if(x.status=='A'){%>
               <td><%= "Approved" %></td>
             <%}%>
+
+            <% if(x.auth=='D' && x.status=='A') {%>
+              <td><%= "Approved By DOFA" %></td>
+              <%}%>
+
+              <% if(x.auth=='H' && x.status=='A') {%>
+                <td><%= "Approved By HOD" %></td>
+                <%}%>
 
             <% if(x.auth=='H' && x.status=='P') {%>
               <td><%= "Pending with HOD" %></td>
@@ -75,7 +85,6 @@
             <%if(x.auth=='X' && x.status=='D'){%>
               <td><%= "Approved By Director" %></td>
             <%}%>
-
           </tr>
         <%})%>
       </tbody>

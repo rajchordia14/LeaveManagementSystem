@@ -53,8 +53,8 @@
           <td><%= x.fid %></td>
           <td><%= x.user %></td>
           <td><%= x.type %></td>
-          <td><%= x.s_date %></td>
-          <td><%= x.e_date %></td>
+          <td><%= x.s_date.toISOString().substring(0,10) %></td>
+          <td><%= x.e_date.toISOString().substring(0,10) %></td>
           <td><%= x.numdays %></td>
           <td><%= x.reason %></td>
           <td><%= x.rembyHOD %></td>
@@ -68,15 +68,21 @@
             <input type="hidden" name="type" value="<%= x.type%>">
             <input type="hidden" name="status" value="<%= x.status%>">
             <input type="hidden" name="dept" value="<%= x.dept%>">
-
+            <input type="hidden" name="numdays" value="<%= x.numdays%>">
             <input type="hidden" name="fidh" value="<%= fidh%>">
             <input type="hidden" name ="userh" value="<%= userh%>">
             <input type="hidden" name ="roleh" value="<%= roleh%>">
             <input type="hidden" name ="depth" value="<%= depth%>">
-            
             <td>
-                <button formaction="/users/dofa" value="1" name="b1"  style="margin-right: 40px;" type="submit" class="btn btn-primary">Approve</button>
+              <%if(x.numdays>30 ){%>
+                <button formaction="/users/dofa" value="1" name="b1"  style="margin-right: 40px;" type="submit" class="btn btn-primary">Submit</button>
+                <button formaction="/users/dofa" name="b2" value="2" type="submit" class="btn btn-danger" ><a style="color: white;">Submit & Recommend</a></button>
+              <%}%>
+              <%if(x.numdays>7 && x.numdays<=30){%>
+                <button formaction="/users/dofa" value="1" name="b1"  style="margin-right: 40px;" type="submit" class="btn btn-primary">Aprrove</button>
                 <button formaction="/users/dofa" name="b2" value="2" type="submit" class="btn btn-danger" ><a style="color: white;">Decline</a></button>
+              <%}%>
+  
             </td>
           </form>
         </tr>

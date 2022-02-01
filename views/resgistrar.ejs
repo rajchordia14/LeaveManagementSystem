@@ -41,8 +41,8 @@
           <td><%= x.fid %></td>
           <td><%= x.user %></td>
           <td><%= x.type %></td>
-          <td><%= x.s_date %></td>
-          <td><%= x.e_date %></td>
+          <td><%= x.s_date.toISOString().substring(0,10) %></td>
+          <td><%= x.e_date.toISOString().substring(0,10) %></td>
           <td><%= x.numdays %></td>
           <td><%= x.reason %></td>
           <td><%= x.rembyHOD %></td>

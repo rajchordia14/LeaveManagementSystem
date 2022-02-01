@@ -1,116 +1,155 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <title>Leave Application</title>
-
-    <script type="text/javascript">
-
-        function GetDays(){
-                var dropdt = new Date(document.getElementById("e_date").value);
-                var pickdt = new Date(document.getElementById("s_date").value);
-                if(dropdt<=pickdt)
-                    return "Invalid Dates";
-                    
-                return parseInt(Math.abs(dropdt - pickdt) / (24 * 3600 * 1000));
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <title>Faculty Leave Application</title>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+        
+    }
+    </style>
+  <script type="text/javascript">
+    function GetHolidays(){
+      let holidays = [];
+      "<% holiday_dates.forEach(x=>{%>"
+      holidays.push("<%= x.dates%>");
+      "<%})%>"
+      for(let i=0;i<holidays.length;i++)
+      {
+        holidays[i]=new Date(holidays[i]);
+      }
+      var dropdt = new Date(document.getElementById("e_date").value);
+      var pickdt = new Date(document.getElementById("s_date").value);
+      let cnt = 0;
+      for(let i=0;i<holidays.length;i++)
+      {
+        if(holidays[i].getTime()>=pickdt.getTime() && holidays[i].getTime()<=dropdt.getTime())
+          {
+            cnt=cnt+1;
+          }
+      }
+      return cnt;
+    }
+    function GetDays(){
+      var dropdt = new Date(document.getElementById("e_date").value);
+      var pickdt = new Date(document.getElementById("s_date").value);
+      if(dropdt<pickdt)
+        return "Invalid Dates";
+      return parseInt(Math.abs(dropdt - pickdt) / (24 * 3600 * 1000));
+    }
+    function GetWeekenddays(){
+      var start = new Date(document.getElementById("s_date").value);
+      var finish = new Date(document.getElementById("e_date").value);
+      var dayMilliseconds = 1000 * 60 * 60 * 24;
+      var weekendDays = 0;
+      while (start <= finish) {
+        var day = start.getDay()
+        if (day == 0) {
+          weekendDays++;
         }
-
-        function cal(){
-        if(document.getElementById("s_date")){
-            document.getElementById("numdays2").value=(GetDays());
-        }  
+        start = new Date(+start + dayMilliseconds);
+      }
+      return parseInt(weekendDays); 
+    }
+    function cal(){
+      if(document.getElementById("s_date")){
+        document.getElementById("numdays2").value=(GetDays()-GetWeekenddays()-GetHolidays()+1);
+      }  
     }
   </script>
-  </head>
-  <body>
+</head>
+<body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Welcome <%= user%></a>
-</nav>
-<div class="container mt-4">
-
-  <div>
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">CL Remaining</th>
-      <th scope="col">PL Remaining</th>
-      <th scope="col">SL Remaining</th>
-      <th scope="col">DL Remaining</th>
-    </tr>
-  </thead>
-  <tbody>
-      <tr> 
-        <td><%= data.fid %></td>
-        <td><%= data.cl %></td>
-        <td><%= data.pl %></td>
-        <td><%= data.sl %></td>
-        <td><%= data.dl %></td>
-      </tr>
-  </tbody>
-
-</table>
-  </div>  
-  <div>
-<h3>Application</h3>
-</div>
-<hr>
-<form method="POST">
-
-  <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <label class="input-group-text" for="inputGroupSelect01">Select</label>
+    <a class="navbar-brand" href="#">Welcome <%= user%></a>
+    <a class="nav-link" href="/users/views/logout">Logout</a>
+  </nav>
+  <div class="container mt-4">
+    <div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">User ID</th>
+            <th scope="col">Casual Leaves</th>
+            <th scope="col">Privileged/Earned Leaves</th>
+            <th scope="col">Special Leaves Taken</th>
+            <th scope="col">On Duty Leaves Taken</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr> 
+            <td><%= data.fid %></td>
+            <td><%= data.cl %></td>
+            <td><%= data.pl %></td>
+            <td><%= data.sl %></td>
+            <td><%= data.dl %></td>
+          </tr>
+        </tbody>
+        
+      </table>
+    </div>  
+    <div>
+      <h3>Application</h3>
     </div>
-    <select name="type" class="custom-select" id="inputGroupSelect01">
-      <option selected value="0">Casual Leave</option>
-      <option value="1">PL</option>
-      <option value="2">DL</option>
-      <option value="3">SL</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="exampleInputPassword1">Start Date</label>
-    <input type="date" name="s_date" class="form-control" id="s_date" placeholder="Enter Start Date" onchange="cal()">
-  </div>
+    <hr>
+    <form method="POST">
+      <% errors.forEach(err=>{ %>
+        <%= err%><br>
+        <%});%>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Select</label>
+          </div>
+          <select name="type" class="custom-select" id="inputGroupSelect01">
+            <option selected value="0">Casual Leave</option>
+            <option value="1">Privileged/Earned Leave</option>
+            <option value="2">On Duty Leave</option>
+            <option value="3">Special Leave</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Start Date</label>
+          <input type="date" name="s_date" class="form-control" id="s_date" placeholder="Enter Start Date" onchange="cal()">
+        </div>
+        
+        <div class="form-group">
+          <label for="exampleInputPassword1">End Date</label>
+          <input type="date" name="e_date" class="form-control" id="e_date" placeholder="Enter End Date" onchange="cal()">
+        </div>
 
-  <div class="form-group">
-    <label for="exampleInputPassword1">End Date</label>
-    <input type="date" name="e_date" class="form-control" id="e_date" placeholder="Enter End Date" onchange="cal()">
-  </div>
+        <input type="hidden" name="fid" value="<%= fid%>">
+        <input type="hidden" name="user" value="<%= user%>">
+        <input type="hidden" name = "role" value="<%= role%>">
+        <input type="hidden" name = "dept" value="<%= dept%>">
 
+        
+        <div class="form-group" id="numdays">
+          <label for="no_of_days" class="form">Number of Leaves</label>
+          <input type="text" name="numdays" class="form-control" id="numdays2" placeholder="Days" readonly>
+        </div>
 
-  <input type="hidden" name="fid" value="<%= fid%>">
-  <input type="hidden" name="user" value="<%= user%>">
-  <input type="hidden" name = "role" value="<%= role%>">
-  <input type="hidden" name = "dept" value="<%= dept%>">
-  
-  <div class="form-group" id="numdays">
-    <label for="no_of_days" class="form">Number of Days</label>
-    <input type="text" name="numdays" class="form-control" id="numdays2" placeholder="Days" readonly>
-  </div>
-
-
-  <div class="form-group">
-    <label for="Remark">Remark</label>
-    <input type="text" name="remark" class="form-control" id="remark" aria-describedby="remark" placeholder="Enter Remark">
-  </div>
-
-  <button formaction="/users/staff"  style="margin-right: 40px;" type="submit" class="btn btn-primary">Submit</button>
-  <button formaction="/users/previous_app" type="submit" class="btn btn-primary" ><a style="color: white;">Previous Applications</a></button>
-
-</form>
-</div>
-
+        <div class="form-group">
+          <label for="Remark">Remark</label>
+          <input type="text" name="remark" class="form-control" id="remark" aria-describedby="remark" placeholder="Enter Remark">
+        </div>
+        
+        <button formaction="/users/staff"  style="margin-right: 40px;" type="submit" class="btn btn-primary">Submit</button>
+        <button formaction="/users/previous_app" type="submit" class="btn btn-primary" ><a style="color: white;">Previous Applications</a></button>
+        <button formaction="/users/logout" type="submit" class="btn btn-primary" ><a style="color: white;">Logout</a></button>
+      </form>
+    </div>
+    
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
-</html>
+  </html>
