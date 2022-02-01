@@ -1,12 +1,17 @@
 const express = require('express');
 const crypto = require("crypto");
+
 const app = express();
 const {Pool, Client} = require("pg");
 const { application } = require('express');
 const { count } = require('console');
 var nodemailer = require('nodemailer');
 const { captureRejections } = require('events');
-const { parse } = require('path');
+const path = require("path");
+require("dotenv").config();
+
+
+
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -15,19 +20,45 @@ var transporter = nodemailer.createTransport({
     }
   });
 const PORT = process.env.PORT || 4000;
+
+
 // const algorithm = "aes-256-cbc"; 
 // const initVector = crypto.randomBytes(16);
 // const Securitykey = crypto.randomBytes(32);
 
-const pool = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "Leave_Manage",
-    password: "12345678",
-    port: "5432"
-});
+const devConfig = {
+    user: process.env.PG_USER,
+    host: process.env.PG_HOST,
+    database: process.env.PG_DATABASE,
+    password: process.env.PG_PASSWORD,
+    port: process.env.PG_PORT   
+}
+
+const proConfig = {
+    connectionString: process.env.DATABASE_URL//heroku addons
+}
+
+const pool = new Pool(process.env.NODE_ENV === "production" ? proConfig : devConfig);
 app.set("view engine","ejs");
 app.use(express.urlencoded({extended:false}));
+module.exports = pool;
+//process.env.PORT
+//process.env.NODE_ENV =>production
+
+//app.use(express.static(path.join(__dirname,"views")));
+
+if(process.env.NODE_ENV === "production"){
+    //server static content
+    // npm run build
+    app.use(express.static(path.join(__dirname,"views")));
+}
+
+console.log(__dirname);
+
+
+
+
+
 
 app.post('/users/staff',(req,res)=>{
 
@@ -647,7 +678,7 @@ app.post("/users/hod",(req,res)=>{
         {
             query = `UPDATE record SET status = 'P', auth='D', "rembyHOD" = '${rembyHOD}',"recbyHOD" = true where fid='${fid}' AND s_date = '${sdate}' AND e_date = '${edate}' AND type = '${type}' AND status ='${status}'`;
         }
-    }
+    } 
     pool.query(
         query,(err,result)=>{
             
@@ -982,7 +1013,10 @@ app.post("/users/login",(req,res)=>{
                                 res.render("login",{errors:errors})
                             }
                         });
-});                                                                              
+});
+app.get("*",(req,res)=>{
+    res.sendFile(path.join(__dirname,"views/index.html"));
+})                                                                              
 app.listen(PORT,()=>{
     console.log(`Server running on port ${PORT}`);
 });
